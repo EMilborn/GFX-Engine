@@ -13,7 +13,7 @@ def draw_line( x0, y0, x1, y1, screen, color ):
     
 
 
-    if (A > 0):
+    if (A > 0):#octant I or II
         if(A < -B):#octant I
             d = 2*A + B #(A + 2*B)()()()()(A-2*B)(2*A+B) 
             while x < x1:#(y < y1)()()()()(y > y1)(x<x1)
@@ -27,8 +27,9 @@ def draw_line( x0, y0, x1, y1, screen, color ):
                 d+=2*A#(d += 2B)()()()()(d-=2B)(d+=2A)
                 
         else:#octant II
+            d = A + 2*B #(A + 2*B)()()()()(A-2*B)(2*A+B) 
             while y < y1:
-                d = A + 2*B #(A + 2*B)()()()()(A-2*B)(2*A+B) 
+                
                 plot(screen, color, x, y)
 
                 if d < 0: 
@@ -39,7 +40,7 @@ def draw_line( x0, y0, x1, y1, screen, color ):
                 d+=2*B
 
     else:
-        if(-A < -B):#octant VII
+        if(-A > -B):#octant VII
             d = A - 2*B #(A + 2*B)()()()()(A-2*B)(2*A+B) 
             while y > y1:#(y < y1)()()()()(y > y1)(x<x1)
                 plot(screen, color, x, y)
