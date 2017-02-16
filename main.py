@@ -13,6 +13,6 @@ while(n<500):
     n+=10
     
 
-display(screen)
+
 
 save_extension(screen, 'img.png')
