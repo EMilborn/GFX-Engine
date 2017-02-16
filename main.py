@@ -12,5 +12,5 @@ while(n<500):
     draw_line(500-n,0,0,n,screen, color)
     n+=10
     
-
+display(screen)
 save_extension(screen, 'pic.png')
