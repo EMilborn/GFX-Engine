@@ -1,4 +1,5 @@
 from display import *
+from matrix import *
 
 def draw_line( x0, y0, x1, y1, screen, color ):
 
@@ -63,5 +64,23 @@ def draw_line( x0, y0, x1, y1, screen, color ):
 
                 x+=1#(y += 1)()()()()(y-=1)(x+=1)
                 d+=2*A#(d += 2B)()()()()(d-=2B)(d+=2A)
+
+
             
     plot(screen, color, x1, y1)
+
+def add_point(m, x, y, z):
+    m.append([x, y, z, 1])
+
+def add_edge(m, x1, y1, z1, x2, y2, z2):
+    add_point(m, x1, y1, z1)
+    add_point(m, x2, y2, z2)
+
+def draw_matrix(m, screen, color):
+    for i in range(len(m)/2):
+        x1 = m[2*i][0]
+        y1 = m[2*i][1]
+        x2 = m[2*i+1][0]
+        y2 = m[2*i+1][1]
+        draw_line(x1,y1,x2,y2,screen, color)
+
