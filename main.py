@@ -41,30 +41,28 @@ scalar_mult(m, 10)
 print_matrix(m)
 
 
-n=0
 
-while(n<=499):
-    n2=math.sqrt(250**2-(n-249)**2)+249
+for n in range(500):
+    n2=math.sqrt(250**2-(n-250)**2)+250
     plot(screen, [255,0,0],int(n),int(n2))
-    plot(screen, [255,0,0],int(n),500-int(n2))
-   # plot(screen, [255,0,0],int(n2),int(n))
-    #plot(screen, [255,0,0],-int(n2),int(n))
-    n+=.1
+    plot(screen, [255,0,0],int(n),499-int(n2))
+    plot(screen, [255,0,0],int(n2),int(n))
+    plot(screen, [255,0,0],499-int(n2),int(n))
+    n+=1
 
 n=0
 m = []
 
-while(n<=250):
-    add_edge(m,0,249+n,0,n,499,0) 
+#while(n<=250):
+    #add_edge(m,0,249+n,0,n,499,0) 
     #draw_line(0,249+n,n,499,screen, color)
-    add_edge(m,249+n,499,0,499,499-n,0)
+    #add_edge(m,249+n,499,0,499,499-n,0)
     #draw_line(249+n,499,499,499-n,screen, color)
-    add_edge(m,499,249-n,0,499-n,0,0)
+    #add_edge(m,499,249-n,0,499-n,0,0)
     #draw_line(499,249-n,499-n,0,screen, color)
-    add_edge(m,249-n,0,0,0,n,0) 
+    #add_edge(m,249-n,0,0,0,n,0) 
     #draw_line(249-n,0,0,n,screen, color)
-    n+=10
+    #n+=10
 
 draw_matrix(m, screen, color)
 display(screen)
-save_extension(screen, 'pic2.png')
