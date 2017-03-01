@@ -53,16 +53,16 @@ for n in range(500):
 n=0
 m = []
 
-#while(n<=250):
-    #add_edge(m,0,249+n,0,n,499,0) 
+while(n<=250):
+    add_edge(m,0,249+n,0,n,499,0) 
     #draw_line(0,249+n,n,499,screen, color)
-    #add_edge(m,249+n,499,0,499,499-n,0)
+    add_edge(m,249+n,499,0,499,499-n,0)
     #draw_line(249+n,499,499,499-n,screen, color)
-    #add_edge(m,499,249-n,0,499-n,0,0)
+    add_edge(m,499,249-n,0,499-n,0,0)
     #draw_line(499,249-n,499-n,0,screen, color)
-    #add_edge(m,249-n,0,0,0,n,0) 
+    add_edge(m,249-n,0,0,0,n,0) 
     #draw_line(249-n,0,0,n,screen, color)
-    #n+=10
+    n+=10
 
 draw_matrix(m, screen, color)
 display(screen)
