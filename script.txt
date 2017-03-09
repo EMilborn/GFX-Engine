@@ -21,5 +21,6 @@ y 30
 rotate
 z -70
 apply
+display
 save
-image.ppm
+image.png
