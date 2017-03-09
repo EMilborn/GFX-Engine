@@ -1,0 +1,25 @@
+line
+0 0 0 50 50 50
+line
+50 50 50 30 160 89
+line
+30 160 89 0 0 0
+line
+30 160 89 38 29 67
+line
+0 0 0 38 29 67
+line
+38 29 67 50 50 50
+scale
+4 1 2
+move
+50 150 250
+rotate
+x 15
+rotate
+y 30
+rotate
+z -70
+apply
+save
+image.ppm
