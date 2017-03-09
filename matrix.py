@@ -53,12 +53,12 @@ def scale(dX, dY, dZ, tM):
     matrix_mult(scale, tM)
 
 def translate(dX, dY, dZ, tM):
-    trans= new_matrix()
+    trans = new_matrix()
     ident(trans)
-    scale[4][0] = dX
-    scale[4][1] = dY
-    scale[4][2] = dZ
-    matrix_mult(scale, tM)
+    trans[3][0] = dX
+    trans[3][1] = dY
+    trans[3][2] = dZ
+    matrix_mult(trans, tM)
 
 def rotation(axis, deg, tM):
     rot = new_matrix()
@@ -67,19 +67,19 @@ def rotation(axis, deg, tM):
     c = math.cos(angle)
     s = math.sin(angle)
     if axis == "x":
+        rot[0][0] = c
+        rot[1][1] = c
+        rot[0][1] = -s
+        rot[1][0] = s
+    if axis == "y":
         rot[1][1] = c
         rot[2][2] = c
-        rot[2][1] = -s
-        rot[1][2] = s
-    if axis == "y":
-        rot[0][0] = c
-        rot[2][2] = c
-        rot[0][2] = -s
-        rot[2][0] = s
+        rot[1][2] = -s
+        rot[2][1] = s
     if axis == "z":
         rot[0][0] = c
-        rot[1][1] = c
-        rot[1][0] = -s
-        rot[0][1] = s
+        rot[2][2] = c
+        rot[2][0] = -s
+        rot[0][2] = s
     matrix_mult(rot, tM)
     

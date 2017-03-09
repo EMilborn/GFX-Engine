@@ -2,6 +2,10 @@ from display import *
 from matrix import *
 
 def draw_line( x0, y0, x1, y1, screen, color ):
+    x0 = int(x0)
+    y0 = int(y0)
+    x1 = int(x1)
+    y1 = int(y1)
 
     if (x0 > x1):
         draw_line(x1, y1, x0, y0, screen, color)
