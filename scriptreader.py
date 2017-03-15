@@ -26,16 +26,18 @@ def interpret(fileN):
         
 def intComm(screen, command, a, edges, trans):
     print command
-    print a
+     print a
     try:
         if command == "line":
+            for n in range(len(a)):
+                a[n] = float(a[n])
             add_edge(edges,
-                     int(a[0]),
-                     int(a[1]),
-                     int(a[2]),
-                     int(a[3]),
-                     int(a[4]),
-                     int(a[5]))
+                     a[0],
+                     a[1],
+                     a[2],
+                     a[3],
+                     a[4],
+                     a[5])
             return 2
         
         if command == "ident":
@@ -44,24 +46,22 @@ def intComm(screen, command, a, edges, trans):
             return 1
         
         if command == "scale":
-            
-            scale(int(a[0]),
-                  int(a[1]),
-                  int(a[2]),
-                  trans)
+            for n in range(len(a)):
+                a[n] = float(a[n])
+            scale(a[0],a[1],a[2],trans)
             return 2
         
         if command == "move":
             
-            translate(int(a[0]),
-                      int(a[1]),
-                      int(a[2]),
+            translate(float(a[0]),
+                      float(a[1]),
+                      float(a[2]),
                       trans)
             return 2
         
         if command == "rotate":
             rotation(a[0],
-                     int(a[1]),
+                     float(a[1]),
                      trans)
             return 2
         
@@ -78,8 +78,28 @@ def intComm(screen, command, a, edges, trans):
             draw_matrix(edges, screen,  [255, 255, 255])
             save_ppm(screen, a[0])
             return 2
+
+        if command == "circle":
+            for n in range(len(a)):
+                a[n] = float(a[n])
+                
+            circle(edges, a[0], a[1], a[2], a[3])
+            return 2
+
+        if command == "hermite":
+            for n in range(len(a)):
+                a[n] = float(a[n])
+            hermite(edges, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
+            return 2
+
+         if command == "bezier":
+            for n in range(len(a)):
+                a[n] = float(a[n])
+            bezier(edges, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
+            return 2
         
         return 0
+
     except:
         return 0
         

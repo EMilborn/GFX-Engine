@@ -82,4 +82,23 @@ def rotation(axis, deg, tM):
         rot[2][0] = -s
         rot[0][2] = s
     matrix_mult(rot, tM)
+
+def circle(edges, cx, cy, cz, r):
+    #s = 100
     
+    #for n in range(s):
+     #   x = math.cos(math.pi*2*n/s)
+      #  x*=r
+       # x+=cx
+        #y = math.sin(math.pi*2*n/s)
+       # y*=r
+        #y+=cx
+    pass
+
+def hermite(edges, x0, y0, x1, y1, rx0, ry0, rx1, ry1):
+    s = 100
+    pass
+
+def bezier(edges, x0, y0, x1, y1, x2, y2, x3, y3):
+    s = 100
+    pass
