@@ -25,8 +25,6 @@ def interpret(fileN):
             i += dI
         
 def intComm(screen, command, a, edges, trans):
-    print command
-     print a
     try:
         if command == "line":
             for n in range(len(a)):
@@ -78,7 +76,7 @@ def intComm(screen, command, a, edges, trans):
             draw_matrix(edges, screen,  [255, 255, 255])
             save_ppm(screen, a[0])
             return 2
-
+    
         if command == "circle":
             for n in range(len(a)):
                 a[n] = float(a[n])
@@ -92,7 +90,7 @@ def intComm(screen, command, a, edges, trans):
             hermite(edges, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
             return 2
 
-         if command == "bezier":
+        if command == "bezier":
             for n in range(len(a)):
                 a[n] = float(a[n])
             bezier(edges, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
