@@ -22,5 +22,3 @@ rotate
 z -70
 apply
 display
-save
-image.png
