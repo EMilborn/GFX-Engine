@@ -1,6 +1,6 @@
 import math
 import random
-
+from draw import *
 
 def print_matrix( matrix ):
     for y in range(len(matrix[0])):
@@ -82,4 +82,64 @@ def rotation(axis, deg, tM):
         rot[2][0] = -s
         rot[0][2] = s
     matrix_mult(rot, tM)
+
+def circle(edges, cx, cy, cz, r):
+    print "new circ"
+    s = 100
+    x = cx + r
+    y = cy
+    for t in range(1,s+1):
+        add_point(edges, x, y, cz)
+        x = math.cos(math.pi*2*t/s)
+        x*=r
+        x+=cx
+        y = math.sin(math.pi*2*t/s)
+        y*=r
+        y+=cy
+        add_point(edges, x, y, cz)
     
+
+def hermite(edges, x0, y0, x1, y1, rx0, ry0, rx1, ry1):
+    s = 100.0
+    mult = [[2, -3,  0,  1],
+            [-2,  3,  0,  0],
+            [ 1, -2,  1,  0],
+            [ 1, -1,  0,  0]
+            ]
+    fx = [[x0, x1, rx0,rx1]]
+    fy = [[y0, y1, ry0, ry1]]
+    matrix_mult(mult, fx)
+    matrix_mult(mult, fy)
+    fx = fx[0]
+    fy = fy[0] 
+    x=x0
+    y=y0
+    for t in range(1,int(s)):
+        add_point(edges, x, y, 0)
+        x = fx[0]*(t/s)**3 + fx[1]*(t/s)**2 + fx[2]*(t/s) + fx[3]
+        y = fy[0]*(t/s)**3 + fy[1]*(t/s)**2 + fy[2]*(t/s) + fy[3]
+        add_point(edges, x, y, 0)
+    
+
+def bezier(edges, x0, y0, x1, y1, x2, y2, x3, y3):
+    s = 100.0
+    mult = [[-1,  3, -3,  1],
+            [ 3, -6,  3,  0],
+            [-3,  3,  0,  0],
+            [ 1,  0,  0,  0]
+            ]
+    fx = [[x0, x1, x2, x3]]
+    fy = [[y0, y1, y2, y3]]
+    matrix_mult(mult, fx)
+    matrix_mult(mult, fy)
+    fx = fx[0]
+    fy = fy[0] 
+    x = x0
+    y = y0
+    for t in range(1,int(s)+1):
+        add_point(edges, x, y, 0)
+        x = fx[0]*(t/s)**3 + fx[1]*(t/s)**2 + fx[2]*(t/s) + fx[3]
+        y = fy[0]*(t/s)**3 + fy[1]*(t/s)**2 + fy[2]*(t/s) + fy[3]
+        
+        add_point(edges, x, y, 0)
+    pass

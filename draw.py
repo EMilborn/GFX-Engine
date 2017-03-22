@@ -82,9 +82,9 @@ def add_edge(m, x1, y1, z1, x2, y2, z2):
 
 def draw_matrix(m, screen, color):
     for i in range(len(m)/2):
-        x1 = m[2*i][0]
-        y1 = m[2*i][1]
-        x2 = m[2*i+1][0]
-        y2 = m[2*i+1][1]
+        x1 = int(m[2*i][0])
+        y1 = int(m[2*i][1])
+        x2 = int(m[2*i+1][0])
+        y2 = int(m[2*i+1][1])
         draw_line(x1,y1,x2,y2,screen, color)
 
