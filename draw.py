@@ -3,6 +3,19 @@ from matrix import *
 from math import *
 
 def add_box( points, x, y, z, width, height, depth ):
+    corners = []
+    for away in range(2):
+        for right in range(2):
+            for down in range(2):
+                x0 = x+right*width 
+                y0 = y-down*height
+                z0 = z-away*depth
+                add_edge(points, x0, y0, z0, x+(not right)*width,y0,z0)
+                add_edge(points, x0, y0, z0, x0, y-(not down)*height,z0)
+                add_edge(points, x0, y0, z0, x0, y0,z-(not away)*depth)
+                                
+    
+                    
     pass
 
 def add_sphere( points, cx, cy, cz, r, step ):
