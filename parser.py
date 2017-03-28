@@ -42,7 +42,7 @@ The file follows the following format:
 	 quit: end parsing
 See the file script for an example of the file format
 """
-ARG_COMMANDS = [ 'line', 'scale', 'move', 'rotate', 'save', 'circle', 'bezier', 'hermite' ]
+ARG_COMMANDS = [ 'line', 'scale', 'move', 'rotate', 'save', 'circle', 'bezier', 'hermite', 'box', 'torus']
 
 def parse_file( fname, edges, transform, screen, color ):
 
@@ -102,7 +102,17 @@ def parse_file( fname, edges, transform, screen, color ):
             else:
                 t = make_rotZ(theta)
             matrix_mult(t, transform)
+
+        elif line == 'box':
+            for i in range(len(args)):
+                args[i] = int(args[i])
+            add_box(edges, args[0], args[1], args[2], args[3], args[4], args[5])
                 
+        elif line == 'torus':
+            for i in range(len(args)):
+                args[i] = int(args[i])
+            add_torus(edges, args[0], args[1], args[2], args[3], args[4],100)
+            
         elif line == 'ident':
             ident(transform)
 
