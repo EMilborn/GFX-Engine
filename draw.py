@@ -15,10 +15,26 @@ def add_box( points, x, y, z, width, height, depth ):
                 add_edge(points, x0, y0, z0, x0, y0,z-(not away)*depth)
 
 def add_sphere( points, cx, cy, cz, r, step ):
+     for point in generate_sphere(cx,cy,cz,r,step):
+        add_edge(points, point[0], point[1], point[2], point[0], point[1], point[2])
     
-    pass
+
 def generate_sphere( cx, cy, cz, r, step ):
-    
+    step = float(step)
+    i = 0
+    points=[]
+    while i <= step:
+        j=0
+        while j <= step:
+           t = 2*math.pi*i/step
+           u = math.pi*j/step
+           points.append([
+               math.cos(u)*(r*math.cos(t)) + cx,
+               r*math.sin(t)+cy,
+               -math.sin(u)*(r*math.cos(t)) + cz])
+           j+=1
+        i+=1
+    return points
     pass
 
 def add_torus( points, cx, cy, cz, r0, r1, step ):
