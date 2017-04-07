@@ -111,12 +111,12 @@ def parse_file( fname, edges, transform, screen, color ):
         elif line == 'torus':
             for i in range(len(args)):
                 args[i] = int(args[i])
-            add_torus(edges, args[0], args[1], args[2], args[3], args[4],100)
+            add_torus(edges, args[0], args[1], args[2], args[3], args[4],.049999)
 
         elif line == 'sphere':
             for i in range(len(args)):
                 args[i] = int(args[i])
-            add_sphere(edges, args[0], args[1], args[2], args[3],100)
+            add_sphere(edges, args[0], args[1], args[2], args[3], .1)
             
         elif line == 'ident':
             ident(transform)
@@ -126,8 +126,7 @@ def parse_file( fname, edges, transform, screen, color ):
 
         elif line == 'display' or line == 'save':
             clear_screen(screen)
-            draw_lines(edges, screen, color)
-
+            draw_polygons(edges, screen, color)
             if line == 'display':
                 display(screen)
             else:
