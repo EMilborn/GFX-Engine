@@ -1,5 +1,5 @@
-sphere
-0 0 0 100
+torus
+0 0 0 50 100
 ident
 display
 move

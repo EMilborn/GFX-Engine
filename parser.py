@@ -116,7 +116,7 @@ def parse_file( fname, edges, transform, screen, color ):
         elif line == 'sphere':
             for i in range(len(args)):
                 args[i] = int(args[i])
-            add_sphere(edges, args[0], args[1], args[2], args[3], .1)
+            add_sphere(edges, args[0], args[1], args[2], args[3], .04999999)
             
         elif line == 'ident':
             ident(transform)

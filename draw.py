@@ -19,7 +19,7 @@ def draw_polygons( points, screen, color ):
         x02 = points[i+2][0] - points[i][0]
         y02 = points[i+2][1] - points[i][1]
         cp = x01*y02 - x02*y01
-        if True:
+        if cp>0:
             draw_line(points[i][0],points[i][1],points[i+1][0],points[i+1][1], screen,color)
             draw_line(points[i][0],points[i][1],points[i+2][0],points[i+2][1], screen,color) 
             draw_line(points[i+2][0],points[i+2][1],points[i+1][0],points[i+1][1], screen,color)
@@ -32,12 +32,21 @@ def add_box( points, x, y, z, width, height, depth ):
     y1 = y - height
     z1 = z - depth
 
+    v = [[x,y,z],
+        [x,y,z1],
+        [x,y1,z],
+        [x,y1,z1],
+        [x1,y,z],
+        [x1,y,z1],
+        [x1,y1,z],
+        [x1,y1,z1]]
+    
     #front
-    add_edge(points, x, y, z, x+2, y+2, z+2)
-    add_edge(points, x, y1, z, x+2, y1+2, z+2)
-    add_edge(points, x1, y, z, x1+2, y+2, z+2)
-    add_edge(points, x1, y1, z, x1+2, y1+2, z+2)
-
+    add_polygon(points,v[0],v[2],v[4])
+    add_polygon(points,v[6],v[4],v[2])
+    add_polygon(points,v[4],v[1],v[0])
+    
+    
     #back
     add_edge(points, x, y, z1, x+2, y+2, z1+2)
     add_edge(points, x, y1, z1, x+2, y1+2, z1+2)
@@ -47,9 +56,10 @@ def add_box( points, x, y, z, width, height, depth ):
 def add_sphere( edges, cx, cy, cz, r, step ):
     num_steps = int(math.ceil(1./step))
     points = generate_sphere(cx,cy,cz,r,step)
-    for i in range(1):
-        for j in range(num_steps+1):
-            p = i*num_steps + j
+    for i in range(num_steps):
+                    
+        for j in range(num_steps):
+            p = (i*num_steps + j)%len(points)
             #print p
             #add_polygon(edges, points[p], points[p], points[p])
             try:
@@ -57,6 +67,7 @@ def add_sphere( edges, cx, cy, cz, r, step ):
                 add_polygon(edges, points[p], points[p+num_steps], points[p+num_steps+1])
             except:
                 pass
+            
     #print("done")
     
 def generate_sphere( cx, cy, cz, r, step ):
@@ -84,8 +95,9 @@ def add_torus( edges, cx, cy, cz, r0, r1, step ):
     num_steps = int(math.ceil(1./step))
     points = generate_torus(cx,cy,cz,r0,r1,step)
     for i in range(num_steps):
+                    
         for j in range(num_steps):
-            p = i*num_steps + j
+            p = (i*num_steps + j)%len(points)
             #print p
             #add_polygon(edges, points[p], points[p], points[p])
             try:
@@ -93,6 +105,8 @@ def add_torus( edges, cx, cy, cz, r0, r1, step ):
                 add_polygon(edges, points[p], points[p+num_steps], points[p+num_steps+1])
             except:
                 pass
+            
+    #print("done")
     
 def generate_torus( cx, cy, cz, r0, r1, step ):
     points = []
