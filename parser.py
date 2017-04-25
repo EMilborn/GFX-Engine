@@ -44,7 +44,12 @@ See the file script for an example of the file format
 """
 ARG_COMMANDS = [ 'line', 'scale', 'move', 'rotate', 'save', 'circle', 'bezier', 'hermite', 'box', 'torus', 'sphere']
 
-def parse_file( fname, edges, transform, screen, color ):
+def parse_file( fname, screen, color ):
+
+    transform = new_matrix()
+    ident(transform)
+    transform = [transform]
+    
 
     f = open(fname)
     lines = f.readlines()
@@ -58,6 +63,12 @@ def parse_file( fname, edges, transform, screen, color ):
         if line in ARG_COMMANDS:
             c+= 1
             args = lines[c].strip().split(' ')
+
+        if line == 'push':
+            transform += transform[len(transform)-1][:]
+
+        if line == 'pop':
+            tranform = tranform[:-1]
 
         if line == 'circle':
             #print 'CIRCLE\t' + str(args)
@@ -84,12 +95,12 @@ def parse_file( fname, edges, transform, screen, color ):
         elif line == 'scale':
             #print 'SCALE\t' + str(args)
             t = make_scale(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(t, transform)
+            matrix_mult(t, transform[len(tranform)-1])
 
         elif line == 'move':
             #print 'MOVE\t' + str(args)
             t = make_translate(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(t, transform)
+            matrix_mult(t, transform[len(tranform)-1])
 
         elif line == 'rotate':
             #print 'ROTATE\t' + str(args)
@@ -101,22 +112,32 @@ def parse_file( fname, edges, transform, screen, color ):
                 t = make_rotY(theta)
             else:
                 t = make_rotZ(theta)
-            matrix_mult(t, transform)
+            matrix_mult(t, transform[len(tranform)-1])
 
         elif line == 'box':
             for i in range(len(args)):
                 args[i] = int(args[i])
-            add_box(edges, args[0], args[1], args[2], args[3], args[4], args[5])
+            temp = []
+            add_box(temp, args[0], args[1], args[2], args[3], args[4], args[5])
+            matrix_mult(transform[len(transform)-1],temp)
+            draw_polygons(temp, screen, color)
                 
         elif line == 'torus':
             for i in range(len(args)):
                 args[i] = int(args[i])
-            add_torus(edges, args[0], args[1], args[2], args[3], args[4],.049999)
+            temp = []
+            add_torus(temp, args[0], args[1], args[2], args[3], args[4],.049999)
+            matrix_mult(transform[len(transform)-1],temp)
+            draw_polygons(temp, screen, color)
 
         elif line == 'sphere':
             for i in range(len(args)):
                 args[i] = int(args[i])
-            add_sphere(edges, args[0], args[1], args[2], args[3], .04999999)
+            temp = []
+            add_sphere(temp, args[0], args[1], args[2], args[3], .04999999)
+            matrix_mult(transform[len(transform)-1],temp)
+            draw_polygons(temp, screen, color)
+
             
         elif line == 'ident':
             ident(transform)
