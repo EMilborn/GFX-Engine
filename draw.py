@@ -40,19 +40,25 @@ def add_box( points, x, y, z, width, height, depth ):
         [x1,y,z1],
         [x1,y1,z],
         [x1,y1,z1]]
-    
+    #left
+    add_polygon(points,v[0],v[1],v[2])
+    add_polygon(points,v[3],v[2],v[1])
+    #top
+    add_polygon(points,v[4],v[1],v[0])
+    add_polygon(points,v[1],v[4],v[5])
+    #right
+    add_polygon(points,v[4],v[6],v[7])
+    add_polygon(points,v[7],v[5],v[4])
+    #bottom
+    add_polygon(points,v[2],v[3],v[7])
+    add_polygon(points,v[7],v[6],v[2])    
     #front
     add_polygon(points,v[0],v[2],v[4])
     add_polygon(points,v[6],v[4],v[2])
-    add_polygon(points,v[4],v[1],v[0])
-    
-    
     #back
-    add_edge(points, x, y, z1, x+2, y+2, z1+2)
-    add_edge(points, x, y1, z1, x+2, y1+2, z1+2)
-    add_edge(points, x1, y, z1, x1+2, y+2, z1+2)
-    add_edge(points, x1, y1, z1, x1+2, y1+2, z1+2)
-
+    add_polygon(points,v[1],v[5],v[7])
+    add_polygon(points,v[7],v[3],v[1])
+    
 def add_sphere( edges, cx, cy, cz, r, step ):
     num_steps = int(math.ceil(1./step))
     points = generate_sphere(cx,cy,cz,r,step)

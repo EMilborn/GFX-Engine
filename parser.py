@@ -65,42 +65,51 @@ def parse_file( fname, screen, color ):
             args = lines[c].strip().split(' ')
 
         if line == 'push':
-            transform += transform[len(transform)-1][:]
-
+            transform.append(transform[len(transform)-1][:])
+            
         if line == 'pop':
-            tranform = tranform[:-1]
+            transform = transform[:-1]
 
         if line == 'circle':
             #print 'CIRCLE\t' + str(args)
-            add_circle(edges,
+            temp = []
+            add_circle(temp,
                        float(args[0]), float(args[1]), float(args[2]),
                        float(args[3]), step)
+            matrix_mult(transform[-1],temp)
+            draw_lines(temp, screen, color)
 
         elif line == 'hermite' or line == 'bezier':
             #print 'curve\t' + line + ": " + str(args)
+            temp = []
             add_curve(edges,
                       float(args[0]), float(args[1]),
                       float(args[2]), float(args[3]),
                       float(args[4]), float(args[5]),
                       float(args[6]), float(args[7]),
-                      step, line)                      
+                      step, line)
+            matrix_mult(transform[-1],temp)
+            draw_lines(temp, screen, color) 
             
         elif line == 'line':            
             #print 'LINE\t' + str(args)
-
-            add_edge( edges,
+            temp=[]
+            add_edge( temp,
                       float(args[0]), float(args[1]), float(args[2]),
                       float(args[3]), float(args[4]), float(args[5]) )
+            matrix_mult(transform[-1],temp)
 
         elif line == 'scale':
             #print 'SCALE\t' + str(args)
             t = make_scale(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(t, transform[len(tranform)-1])
+            matrix_mult(transform[-1],t)
+            transform[-1]=t
 
         elif line == 'move':
             #print 'MOVE\t' + str(args)
             t = make_translate(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(t, transform[len(tranform)-1])
+            matrix_mult(transform[-1],t)
+            transform[-1]=t
 
         elif line == 'rotate':
             #print 'ROTATE\t' + str(args)
@@ -112,14 +121,16 @@ def parse_file( fname, screen, color ):
                 t = make_rotY(theta)
             else:
                 t = make_rotZ(theta)
-            matrix_mult(t, transform[len(tranform)-1])
+            matrix_mult(transform[-1],t)
+            transform[-1]=t
 
         elif line == 'box':
             for i in range(len(args)):
                 args[i] = int(args[i])
             temp = []
             add_box(temp, args[0], args[1], args[2], args[3], args[4], args[5])
-            matrix_mult(transform[len(transform)-1],temp)
+            print len(temp)
+            matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
                 
         elif line == 'torus':
@@ -127,7 +138,7 @@ def parse_file( fname, screen, color ):
                 args[i] = int(args[i])
             temp = []
             add_torus(temp, args[0], args[1], args[2], args[3], args[4],.049999)
-            matrix_mult(transform[len(transform)-1],temp)
+            matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
 
         elif line == 'sphere':
@@ -135,7 +146,7 @@ def parse_file( fname, screen, color ):
                 args[i] = int(args[i])
             temp = []
             add_sphere(temp, args[0], args[1], args[2], args[3], .04999999)
-            matrix_mult(transform[len(transform)-1],temp)
+            matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
 
             
@@ -146,8 +157,6 @@ def parse_file( fname, screen, color ):
             matrix_mult( transform, edges )
 
         elif line == 'display' or line == 'save':
-            clear_screen(screen)
-            draw_polygons(edges, screen, color)
             if line == 'display':
                 display(screen)
             else:
