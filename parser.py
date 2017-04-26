@@ -137,7 +137,7 @@ def parse_file( fname, screen, color ):
             for i in range(len(args)):
                 args[i] = int(args[i])
             temp = []
-            add_torus(temp, args[0], args[1], args[2], args[3], args[4],.049999)
+            add_torus(temp, args[0], args[1], args[2], args[3], args[4],.1)
             matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
 
