@@ -32,6 +32,7 @@ The file follows the following format:
 	 rotate: create a rotation matrix,
 	    then multiply the transform matrix by the rotation matrix -
 	    takes 2 arguments (axis, theta) axis should be x, y or z
+         clear: clear the edge matrix of points
 	 apply: apply the current transformation matrix to the 
 	    edge matrix
 	 display: draw the lines of the edge matrix to the screen
@@ -42,74 +43,90 @@ The file follows the following format:
 	 quit: end parsing
 See the file script for an example of the file format
 """
-ARG_COMMANDS = [ 'line', 'scale', 'move', 'rotate', 'save', 'circle', 'bezier', 'hermite', 'box', 'torus', 'sphere']
+ARG_COMMANDS = [ 'line', 'scale', 'move', 'rotate', 'save', 'circle', 'bezier', 'hermite', 'box', 'sphere', 'torus' ]
 
-def parse_file( fname, screen, color ):
-
-    transform = new_matrix()
-    ident(transform)
-    transform = [transform]
-    
+def parse_file( fname, edges, transform, screen, color ):
 
     f = open(fname)
     lines = f.readlines()
 
-    step = 0.01
+    clear_screen(screen)
+    t = new_matrix()
+    ident(t)
+    systems = [ t ]
+
+    step = 0.1
     c = 0
     while c < len(lines):
         line = lines[c].strip()
         #print ':' + line + ':'
 
-        if line in ARG_COMMANDS:
+        if line in ARG_COMMANDS:            
             c+= 1
             args = lines[c].strip().split(' ')
-
-        if line == 'push':
-            transform.append(transform[len(transform)-1][:])
+            #print 'args\t' + str(args)
             
-        if line == 'pop':
-            transform = transform[:-1]
-
-        if line == 'circle':
-            #print 'CIRCLE\t' + str(args)
-            temp = []
-            add_circle(temp,
+        if line == 'sphere':
+            #print 'SPHERE\t' + str(args)
+            add_sphere(edges,
                        float(args[0]), float(args[1]), float(args[2]),
                        float(args[3]), step)
-            matrix_mult(transform[-1],temp)
-            draw_lines(temp, screen, color)
+            matrix_mult( systems[-1], edges )
+            draw_polygons(edges, screen, color)
+            edges = []
+
+        elif line == 'torus':
+            #print 'TORUS\t' + str(args)
+            add_torus(edges,
+                      float(args[0]), float(args[1]), float(args[2]),
+                      float(args[3]), float(args[4]), step)
+            matrix_mult( systems[-1], edges )
+            draw_polygons(edges, screen, color)
+            edges = []
+            
+        elif line == 'box':
+            #print 'BOX\t' + str(args)
+            add_box(edges,
+                    float(args[0]), float(args[1]), float(args[2]),
+                    float(args[3]), float(args[4]), float(args[5]))
+            matrix_mult( systems[-1], edges )
+            draw_polygons(edges, screen, color)
+            edges = []
+            
+        elif line == 'circle':
+            #print 'CIRCLE\t' + str(args)
+            add_circle(edges,
+                       float(args[0]), float(args[1]), float(args[2]),
+                       float(args[3]), step)
 
         elif line == 'hermite' or line == 'bezier':
             #print 'curve\t' + line + ": " + str(args)
-            temp = []
             add_curve(edges,
                       float(args[0]), float(args[1]),
                       float(args[2]), float(args[3]),
                       float(args[4]), float(args[5]),
                       float(args[6]), float(args[7]),
-                      step, line)
-            matrix_mult(transform[-1],temp)
-            draw_lines(temp, screen, color) 
+                      step, line)                      
             
         elif line == 'line':            
             #print 'LINE\t' + str(args)
-            temp=[]
-            add_edge( temp,
+
+            add_edge( edges,
                       float(args[0]), float(args[1]), float(args[2]),
                       float(args[3]), float(args[4]), float(args[5]) )
-            matrix_mult(transform[-1],temp)
 
         elif line == 'scale':
             #print 'SCALE\t' + str(args)
             t = make_scale(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(transform[-1],t)
-            transform[-1]=t
+            matrix_mult( systems[-1], t )
+            systems[-1] = [ x[:] for x in t]
 
         elif line == 'move':
             #print 'MOVE\t' + str(args)
             t = make_translate(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(transform[-1],t)
-            transform[-1]=t
+            matrix_mult( systems[-1], t )
+            systems[-1] = [ x[:] for x in t]
+
 
         elif line == 'rotate':
             #print 'ROTATE\t' + str(args)
@@ -121,34 +138,11 @@ def parse_file( fname, screen, color ):
                 t = make_rotY(theta)
             else:
                 t = make_rotZ(theta)
-            matrix_mult(transform[-1],t)
-            transform[-1]=t
-
-        elif line == 'box':
-            for i in range(len(args)):
-                args[i] = int(args[i])
-            temp = []
-            add_box(temp, args[0], args[1], args[2], args[3], args[4], args[5])
-            print len(temp)
-            matrix_mult(transform[-1],temp)
-            draw_polygons(temp, screen, color)
+            matrix_mult( systems[-1], t )
+            systems[-1] = [ x[:] for x in t]
                 
-        elif line == 'torus':
-            for i in range(len(args)):
-                args[i] = int(args[i])
-            temp = []
-            add_torus(temp, args[0], args[1], args[2], args[3], args[4],.1)
-            matrix_mult(transform[-1],temp)
-            draw_polygons(temp, screen, color)
-
-        elif line == 'sphere':
-            for i in range(len(args)):
-                args[i] = int(args[i])
-            temp = []
-            add_sphere(temp, args[0], args[1], args[2], args[3], .04999999)
-            matrix_mult(transform[-1],temp)
-            draw_polygons(temp, screen, color)
-
+        elif line == 'clear':
+            edges = []
             
         elif line == 'ident':
             ident(transform)
@@ -156,29 +150,17 @@ def parse_file( fname, screen, color ):
         elif line == 'apply':
             matrix_mult( transform, edges )
 
+        elif line == 'push':
+            systems.append( [x[:] for x in systems[-1]] )
+            
+        elif line == 'pop':
+            systems.pop()
+            
         elif line == 'display' or line == 'save':
             if line == 'display':
                 display(screen)
             else:
                 save_extension(screen, args[0])
-
-        elif line == 'clear':
-            edges = [[]]
             
-                
         c+= 1
-        
-                         
-                         
-        
-            
-        
-        
-        
-        
-        
-    
-
-
-
-        
+Contact GitHub API Training Shop Blog About
