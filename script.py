@@ -91,27 +91,26 @@ def run(filename):
             transform[-1]=t
 
         elif line == 'box':
-            for i in range(len(args)):
-                args[i] = int(args[i])
+            args1 = [int(i) for i in args if i is not None]
             temp = []
-            add_box(temp, args[0], args[1], args[2], args[3], args[4], args[5])
+            add_box(temp, args1[0], args1[1], args1[2], args1[3], args1[4], args1[5])
             print len(temp)
             matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
                 
         elif line == 'torus':
-            for i in range(len(args)):
-                args[i] = int(args[i])
+            args1 = [int(i) for i in args if i is not None]
+           
             temp = []
-            add_torus(temp, args[0], args[1], args[2], args[3], args[4],.1)
+            add_torus(temp, args1[0], args[1], args[2], args[3], args[4],.1)
             matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
 
         elif line == 'sphere':
-            for i in range(len(args)):
-                args[i] = int(args[i])
+            print args
+            args1 = [int(i) for i in args if i is not None]
             temp = []
-            add_sphere(temp, args[0], args[1], args[2], args[3], .04999999)
+            add_sphere(temp, args1[0], args1[1], args1[2], args1[3], .04999999)
             matrix_mult(transform[-1],temp)
             draw_polygons(temp, screen, color)
 
