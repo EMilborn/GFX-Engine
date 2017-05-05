@@ -6,3 +6,8 @@ clean:
 
 clear:
 	rm *pyc *out parsetab.py *ppm
+
+run:
+	python script.py
+
+
