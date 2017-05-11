@@ -3,6 +3,41 @@ from display import *
 from matrix import *
 from draw import *
 
+"""======== first_pass( commands, symbols ) ==========
+  Checks the commands array for any animation commands
+  (frames, basename, vary)
+  
+  Should set num_frames and basename if the frames 
+  or basename commands are present
+  If vary is found, but frames is not, the entire
+  program should exit.
+  If frames is found, but basename is not, set name
+  to some default value, and print out a message
+  with the name being used.
+  jdyrlandweaver
+  ==================== """
+def first_pass( commands ):
+    pass
+
+
+"""======== second_pass( commands ) ==========
+  In order to set the knobs for animation, we need to keep
+  a seaprate value for each knob for each frame. We can do
+  this by using an array of dictionaries. Each array index
+  will correspond to a frame (eg. knobs[0] would be the first
+  frame, knobs[2] would be the 3rd frame and so on).
+  Each index should contain a dictionary of knob values, each
+  key will be a knob name, and each value will be the knob's
+  value for that frame.
+  Go through the command array, and when you find vary, go 
+  from knobs[0] to knobs[frames-1] and add (or modify) the
+  dictionary corresponding to the given knob with the
+  appropirate value. 
+  ===================="""
+def second_pass( commands, num_frames ):
+    pass
+
+
 def run(filename):
     """
     This function runs an mdl script
@@ -20,116 +55,60 @@ def run(filename):
         return
 
     ident(tmp)
-    transform = [ [x[:] for x in tmp] ]
+    stack = [ [x[:] for x in tmp] ]
     screen = new_screen()
     tmp = []
     step = 0.1
     for command in commands:
-        line=command[0]
-        try:
-            args=command[1:]
-        except:
-            pass
-        if line == 'push':
-            transform.append(transform[len(transform)-1][:])
-            
-        if line == 'pop':
-            transform = transform[:-1]
+        print command
+        c = command[0]
+        args = command[1:]
 
-        if line == 'circle':
-            #print 'CIRCLE\t' + str(args)
-            temp = []
-            add_circle(temp,
-                       float(args[0]), float(args[1]), float(args[2]),
-                       float(args[3]), step)
-            matrix_mult(transform[-1],temp)
-            draw_lines(temp, screen, color)
-
-        elif line == 'hermite' or line == 'bezier':
-            #print 'curve\t' + line + ": " + str(args)
-            temp = []
-            add_curve(edges,
-                      float(args[0]), float(args[1]),
-                      float(args[2]), float(args[3]),
-                      float(args[4]), float(args[5]),
-                      float(args[6]), float(args[7]),
-                      step, line)
-            matrix_mult(transform[-1],temp)
-            draw_lines(temp, screen, color) 
-            
-        elif line == 'line':            
-            #print 'LINE\t' + str(args)
-            temp=[]
-            add_edge( temp,
-                      float(args[0]), float(args[1]), float(args[2]),
-                      float(args[3]), float(args[4]), float(args[5]) )
-            matrix_mult(transform[-1],temp)
-
-        elif line == 'scale':
-            #print 'SCALE\t' + str(args)
-            t = make_scale(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(transform[-1],t)
-            transform[-1]=t
-
-        elif line == 'move':
-            #print 'MOVE\t' + str(args)
-            t = make_translate(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(transform[-1],t)
-            transform[-1]=t
-
-        elif line == 'rotate':
-            #print 'ROTATE\t' + str(args)
-            theta = float(args[1]) * (math.pi / 180)
-            
+        if c == 'box':
+            add_box(tmp,
+                    args[0], args[1], args[2],
+                    args[3], args[4], args[5])
+            matrix_mult( stack[-1], tmp )
+            draw_polygons(tmp, screen, color)
+            tmp = []
+        elif c == 'sphere':
+            add_sphere(tmp,
+                       args[0], args[1], args[2], args[3], step)
+            matrix_mult( stack[-1], tmp )
+            draw_polygons(tmp, screen, color)
+            tmp = []
+        elif c == 'torus':
+            add_torus(tmp,
+                      args[0], args[1], args[2], args[3], args[4], step)
+            matrix_mult( stack[-1], tmp )
+            draw_polygons(tmp, screen, color)
+            tmp = []
+        elif c == 'move':
+            tmp = make_translate(args[0], args[1], args[2])
+            matrix_mult(stack[-1], tmp)
+            stack[-1] = [x[:] for x in tmp]
+            tmp = []
+        elif c == 'scale':
+            tmp = make_scale(args[0], args[1], args[2])
+            matrix_mult(stack[-1], tmp)
+            stack[-1] = [x[:] for x in tmp]
+            tmp = []
+        elif c == 'rotate':
+            theta = args[1] * (math.pi/180)
             if args[0] == 'x':
-                t = make_rotX(theta)
+                tmp = make_rotX(theta)
             elif args[0] == 'y':
-                t = make_rotY(theta)
+                tmp = make_rotY(theta)
             else:
-                t = make_rotZ(theta)
-            matrix_mult(transform[-1],t)
-            transform[-1]=t
-
-        elif line == 'box':
-            args1 = [int(i) for i in args if i is not None]
-            temp = []
-            add_box(temp, args1[0], args1[1], args1[2], args1[3], args1[4], args1[5])
-            print len(temp)
-            matrix_mult(transform[-1],temp)
-            draw_polygons(temp, screen, color)
-                
-        elif line == 'torus':
-            args1 = [int(i) for i in args if i is not None]
-           
-            temp = []
-            add_torus(temp, args1[0], args[1], args[2], args[3], args[4],.1)
-            matrix_mult(transform[-1],temp)
-            draw_polygons(temp, screen, color)
-
-        elif line == 'sphere':
-            print args
-            args1 = [int(i) for i in args if i is not None]
-            temp = []
-            add_sphere(temp, args1[0], args1[1], args1[2], args1[3], .04999999)
-            matrix_mult(transform[-1],temp)
-            draw_polygons(temp, screen, color)
-
-            
-        elif line == 'ident':
-            ident(transform)
-
-        elif line == 'apply':
-            matrix_mult( transform, edges )
-
-        elif line == 'display' or line == 'save':
-            if line == 'display':
-                display(screen)
-            else:
-                save_extension(screen, args[0])
-
-        elif line == 'clear':
-            edges = [[]]
-            
-                
-        
-run('script.mdl')
+                tmp = make_rotZ(theta)
+            matrix_mult( stack[-1], tmp )
+            stack[-1] = [ x[:] for x in tmp]
+            tmp = []
+        elif c == 'push':
+            stack.append([x[:] for x in stack[-1]] )
+        elif c == 'pop':
+            stack.pop()
+        elif c == 'display':
+            display(screen)
+        elif c == 'save':
+            save_extension(screen, args[0])
