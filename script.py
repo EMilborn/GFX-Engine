@@ -17,7 +17,29 @@ from draw import *
   jdyrlandweaver
   ==================== """
 def first_pass( commands ):
-    pass
+    frames = 0
+    basename = None
+    hasVary = False
+    for command in commands:
+        c = command[0]
+        args = command[1:]
+        if c = "frames":
+            frames = int(args[0])
+        if c = "basename":
+            basename = args[0]
+        if c = "vary":
+            hasVary = True
+
+    if frames > 0 and basename == None:
+        basename = "Untitled"
+        print("basename not foud saving animation as 'Untitled'")
+        
+    if hasVary:
+        if frames <= 0:
+            class MyException(e):
+                pass
+            raise MyException("frames not defined")
+        
 
 
 """======== second_pass( commands ) ==========
@@ -35,7 +57,17 @@ def first_pass( commands ):
   appropirate value. 
   ===================="""
 def second_pass( commands, num_frames ):
-    pass
+    knobs = [{} for i in range(num_frames)]
+    for command in commands:
+        c = command[0]
+        args = command[1:]
+        if c = "vary":
+            knob = args[0]
+            start_frame = args[1]
+            end_frame = args[2]
+            start_val = args[3]
+            end_val = args[4]
+            
 
 
 def run(filename):
