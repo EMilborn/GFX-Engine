@@ -2,6 +2,7 @@ import mdl
 from display import *
 from matrix import *
 from draw import *
+import os
 
 """======== first_pass( commands, symbols ) ==========
   Checks the commands array for any animation commands
@@ -56,7 +57,7 @@ def second_pass( commands, num_frames ):
   dictionary corresponding to the given knob with the
   appropirate value. 
   ===================="""
-    knobs = [{} for i in range(num_frames)]
+    knobs = [{None:1} for i in range(num_frames)]
     for command in commands:
         c = command[0]
         args = command[1:]
@@ -66,8 +67,10 @@ def second_pass( commands, num_frames ):
             end_frame = int(args[2])
             start_val = float(args[3])
             end_val = float(args[4])
-            for i in range(start_frame, end_frame + 1):
-                value = ((end_val-start_val)*(i-start_frame))/(end_frame-start_frame)
+            for i in range(len(knobs)):
+                value = 0
+                if i >= start_frame and i <= end_frame:
+                    value = (start_val + (end_val-start_val)*(i-start_frame))/(end_frame-start_frame)
                 knobs[i][knob] = value
     return knobs
                 
@@ -152,10 +155,14 @@ def run(filename):
                 save_extension(screen, args[0])
         return
     knobs = second_pass(commands, frames)
-    for i in len(knobs):
+    for i in range(len(knobs)):
         frame = knobs[i]
-        tmp = ident(new_matrix())
-        
+        tmp = new_matrix()
+        ident(tmp)
+        stack = [ [x[:] for x in tmp] ]
+        screen = new_screen()
+        tmp = []
+        step = 0.1
         for command in commands:
             c = command[0]
             args = command[1:]
@@ -211,7 +218,7 @@ def run(filename):
             elif c == 'pop':
                 stack.pop()
         save_extension(screen, "anim/%s%03d.png" % (basename,i))
-    os.system('convert anim/%s*.png %s.gif' % (basename))
+    os.system('convert anim/%s*.png %s.gif' % (basename,basename))
         
         
         
