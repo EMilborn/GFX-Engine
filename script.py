@@ -72,7 +72,7 @@ def second_pass( commands, num_frames ):
                 if i >= start_frame and i <= end_frame:
                     value = start_val + (((end_val-start_val)*(i-start_frame))/(end_frame-start_frame))
                 if not(knob in knobs[i]):
-                knobs[i][knob] = value
+                    knobs[i][knob] = value
     return knobs
                 
 
