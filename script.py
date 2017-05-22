@@ -68,11 +68,10 @@ def second_pass( commands, num_frames ):
             start_val = float(args[3])
             end_val = float(args[4])
             for i in range(len(knobs)):
-                value = 0
-                if i >= start_frame and i <= end_frame:
-                    value = start_val + (((end_val-start_val)*(i-start_frame))/(end_frame-start_frame))
                 if not(knob in knobs[i]):
-                    knobs[i][knob] = value
+                    knobs[i][knob] = 0
+                if i >= start_frame and i <= end_frame:
+                    knobs[i][knob] = start_val + (((end_val-start_val)*(i-start_frame))/(end_frame-start_frame))
     return knobs
                 
 
