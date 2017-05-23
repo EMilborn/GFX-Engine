@@ -66,4 +66,4 @@ def make_animation( name ):
     #f = fork()
     #if f == 0:
         #execlp('convert', 'convert', '-delay', '3', name_arg, name)
-    system("magick convert %s %s" %(name_arg, name,))
+    system("convert %s %s" %(name_arg, name,))
