@@ -68,7 +68,7 @@ def second_pass( commands, num_frames ):
             start_val = float(args[3])
             end_val = float(args[4])
             for i in range(len(knobs)):
-                if not(knob in knobs[i]):
+                if knob not in knobs[i]:
                     knobs[i][knob] = 0
                 if i >= start_frame and i <= end_frame:
                     knobs[i][knob] = start_val + (((end_val-start_val)*(i-start_frame))/(end_frame-start_frame))
@@ -195,6 +195,7 @@ def run(filename):
                 tmp = []
             elif c == 'scale':
                 knob = args[3]
+            
                 val = frame[knob]
                 tmp = make_scale(val*args[0], val*args[1], val*args[2])
                 matrix_mult(stack[-1], tmp)
@@ -202,6 +203,7 @@ def run(filename):
                 tmp = []
             elif c == 'rotate':
                 knob = args[2]
+                
                 val = frame[knob]
                 theta = val * args[1] * (math.pi/180)
                 if args[0] == 'x':
@@ -217,8 +219,8 @@ def run(filename):
                 stack.append([x[:] for x in stack[-1]] )
             elif c == 'pop':
                 stack.pop()
-        save_extension(screen, "anim/%s%03d.png" % (basename,i))
-    os.system('convert anim/%s*.png %s.gif' % (basename,basename))
+        save_ppm(screen, "anim/%s%03d" % (basename,i))
+    make_animation(basename)
         
         
         

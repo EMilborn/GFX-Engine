@@ -1,4 +1,4 @@
-test: 
+run: 
 	python main.py simple_anim.mdl
 
 clean:

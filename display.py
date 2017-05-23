@@ -1,6 +1,6 @@
 from subprocess import Popen, PIPE
-#from multiprocessing import Process as fork
-from os import remove, execlp, fork
+
+from os import remove, execlp, system#, fork
 
 #constants
 XRES = 500
@@ -63,6 +63,7 @@ def make_animation( name ):
     name_arg = 'anim/' + name + '*'
     name = name + '.gif'
     print 'Saving animation as ' + name
-    f = fork()
-    if f == 0:
-        execlp('convert', 'convert', '-delay', '3', name_arg, name)
+    #f = fork()
+    #if f == 0:
+        #execlp('convert', 'convert', '-delay', '3', name_arg, name)
+    system("magick convert %s %s" %(name_arg, name,))
