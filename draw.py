@@ -33,9 +33,26 @@ def draw_polygons( matrix, screen, color ):
                        int(matrix[point][1]),
                        int(matrix[point+2][0]),
                        int(matrix[point+2][1]),
-                       screen, color)    
+                       screen, color)
+            
         point+= 3
 
+def triangle(x0, y0, x1, y1, x2, y2):
+    Ys=[y0,y1,y2]
+    Xs=[x0,x1,x2]
+    Is=[0,1,2]
+    minY = Ys.index(min(Ys))
+    Is.remove(minY)
+    maxY = Ys.index(max(Ys))
+    Is.remove(maxY)
+    midY=Is[0]
+    bX, bY = Xs[minY], Ys[minY]
+    mX, mY = Xs[midY], Ys[midY]
+    tX, tY = Xs[maxY], Ys[maxY]
+    y = bY
+        
+    
+    
 
 def add_box( polygons, x, y, z, width, height, depth ):
     x1 = x + width
