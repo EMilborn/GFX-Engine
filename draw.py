@@ -17,25 +17,37 @@ def draw_polygons( matrix, screen, color ):
     while point < len(matrix) - 2:
 
         normal = calculate_normal(matrix, point)[:]
-        print normal
         if normal[2] > 0:
-            draw_line( int(matrix[point][0]),
-                       int(matrix[point][1]),
-                       int(matrix[point+1][0]),
-                       int(matrix[point+1][1]),
-                       screen, color)
-            draw_line( int(matrix[point+2][0]),
-                       int(matrix[point+2][1]),
-                       int(matrix[point+1][0]),
-                       int(matrix[point+1][1]),
-                       screen, color)
-            draw_line( int(matrix[point][0]),
-                       int(matrix[point][1]),
-                       int(matrix[point+2][0]),
-                       int(matrix[point+2][1]),
-                       screen, color)
             
-        point+= 3
+            for pair in triangle(
+                    matrix[point][0],
+                    matrix[point][1],
+                    matrix[point+1][0],
+                    matrix[point+1][1],
+                    matrix[point+2][0],
+                    matrix[point+2][1]):
+                draw_line( round(pair[0]),
+                           round(pair[2]),
+                           round(pair[1]),
+                           round(pair[2]),
+                           screen,
+                           [0,255,0])
+            draw_line( round(matrix[point][0]),
+                       round(matrix[point][1]),
+                       round(matrix[point+1][0]),
+                       round(matrix[point+1][1]),
+                       screen, color)
+            draw_line( round(matrix[point+2][0]),
+                       round(matrix[point+2][1]),
+                       round(matrix[point+1][0]),
+                       round(matrix[point+1][1]),
+                       screen, color)
+            draw_line( round(matrix[point][0]),
+                       round(matrix[point][1]),
+                       round(matrix[point+2][0]),
+                       round(matrix[point+2][1]),
+                       screen, color)
+        point += 3
 
 def triangle(x0, y0, x1, y1, x2, y2):
     Ys=[y0,y1,y2]
@@ -50,8 +62,20 @@ def triangle(x0, y0, x1, y1, x2, y2):
     mX, mY = Xs[midY], Ys[midY]
     tX, tY = Xs[maxY], Ys[maxY]
     y = bY
-        
-    
+    points = []
+    while y < mY:
+        x0 = bX+(y-bY)*(mX-bX)/(mY-bY)
+        x1 = bX+(y-bY)*(tX-bX)/(tY-bY)
+        points.append( (x0, x1, y))
+        y+=1
+    while y < tY:
+        x0 = mX+(y-mY)*(tX-mX)/(tY-mY)
+        x1 = bX+(y-bY)*(tX-bX)/(tY-bY)
+        points.append( (x0, x1, y))
+        y+=1
+    points.append((tX,tX,tY))
+    print points
+    return points
     
 
 def add_box( polygons, x, y, z, width, height, depth ):
@@ -260,6 +284,11 @@ def add_point( matrix, x, y, z=0 ):
 
 
 def draw_line( x0, y0, x1, y1, screen, color ):
+
+    x0 = int(x0)
+    y0 = int(y0)
+    x1 = int(x1)
+    y1 = int(y1)
 
     #swap points if going right -> left
     if x0 > x1:

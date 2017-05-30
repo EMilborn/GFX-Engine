@@ -72,7 +72,6 @@ def second_pass( commands, num_frames ):
                     knobs[i][knob] = 0
                 if i >= start_frame and i <= end_frame:
                     knobs[i][knob] = start_val + (((end_val-start_val)*(i-start_frame))/(end_frame-start_frame))
-    print knobs
     return knobs
                 
 
@@ -102,7 +101,6 @@ def run(filename):
         tmp = []
         step = 0.1
         for command in commands:
-            print command
             c = command[0]
             args = command[1:]
     
