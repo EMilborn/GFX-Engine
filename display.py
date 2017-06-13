@@ -14,22 +14,28 @@ DEFAULT_COLOR = [0, 0, 0]
 
 def new_screen( width = XRES, height = YRES ):
     screen = []
+    zbuffer = []
     for y in range( height ):
         row = []
         screen.append( row )
+        zbuffer.append( row )
         for x in range( width ):
             screen[y].append( DEFAULT_COLOR[:] )
-    return screen
+            zbuffer[y].append( float("-inf") )
+    return screen, zbuffer
 
-def plot( screen, color, x, y ):
+def plot( screen, zbuffer, color, x, y, z ):
     newy = YRES - 1 - y
     if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES ):
-        screen[newy][x] = color[:]
+        if z >= zbuffer[newy][x]:
+            screen[newy][x] = color[:]
+            zbuffer[newy][x] = z
 
-def clear_screen( screen ):
+def clear_screen( screen, zbuffer ):
     for y in range( len(screen) ):
         for x in range( len(screen[y]) ):
             screen[y][x] = DEFAULT_COLOR[:]
+            zbuffer[y][x] = float("-inf")
 
 def save_ppm( screen, fname ):
     f = open( fname, 'w' )

@@ -22,10 +22,13 @@ def draw_polygons( matrix, screen, color ):
             for pair in triangle(
                     matrix[point][0],
                     matrix[point][1],
+                    matrix[point][2],
                     matrix[point+1][0],
                     matrix[point+1][1],
+                    matrix[point+1][2],
                     matrix[point+2][0],
-                    matrix[point+2][1]):
+                    matrix[point+2][1],
+                    matrix[point+2][2]):
                 draw_line( round(pair[0]),
                            round(pair[2]),
                            round(pair[1]),
@@ -49,29 +52,32 @@ def draw_polygons( matrix, screen, color ):
                        screen, color)
         point += 3
 
-def triangle(x0, y0, x1, y1, x2, y2):
+def triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2):
     Ys=[y0,y1,y2]
     Xs=[x0,x1,x2]
+    Zs=[z0,z1,z2]
     Is=[0,1,2]
     minY = Ys.index(min(Ys))
     Is.remove(minY)
     maxY = Ys.index(max(Ys))
     Is.remove(maxY)
     midY=Is[0]
-    bX, bY = Xs[minY], Ys[minY]
-    mX, mY = Xs[midY], Ys[midY]
-    tX, tY = Xs[maxY], Ys[maxY]
+    bX, bY, bZ= Xs[minY], Ys[minY], Zs[minY]
+    mX, mY, mZ = Xs[midY], Ys[midY], Zs[midY]
+    tX, tY, tZ= Xs[maxY], Ys[maxY], Zs[maxY]
     y = bY
     points = []
     while y < mY:
-        x0 = bX+(y-bY)*(mX-bX)/(mY-bY)
-        x1 = bX+(y-bY)*(tX-bX)/(tY-bY)
-        points.append( (x0, x1, y))
+        x3 = bX+(y-bY)*(mX-bX)/(mY-bY)
+        x4 = bX+(y-bY)*(tX-bX)/(tY-bY)
+        z3 = bX+(y-bY)*(mX-bX)/(mY-bY)
+        z4 = bX+(y-bY)*(tX-bX)/(tY-bY)
+        points.append( (x3, x4, y, z3, z4))
         y+=1
     while y < tY:
-        x0 = mX+(y-mY)*(tX-mX)/(tY-mY)
-        x1 = bX+(y-bY)*(tX-bX)/(tY-bY)
-        points.append( (x0, x1, y))
+        x3 = mX+(y-mY)*(tX-mX)/(tY-mY)
+        x4 = bX+(y-bY)*(tX-bX)/(tY-bY)
+        points.append( (x3, x4, y,z3,z4))
         y+=1
     points.append((tX,tX,tY))
     print points
@@ -259,7 +265,7 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         y0 = y
         t+= step
 
-def draw_lines( matrix, screen, color ):
+def draw_lines( matrix, screen, zbuffer, color ):
     if len(matrix) < 2:
         print 'Need at least 2 points to draw'
         return
@@ -268,9 +274,11 @@ def draw_lines( matrix, screen, color ):
     while point < len(matrix) - 1:
         draw_line( int(matrix[point][0]),
                    int(matrix[point][1]),
+                   int(matrix[point][2]),
                    int(matrix[point+1][0]),
                    int(matrix[point+1][1]),
-                   screen, color)    
+                   int(matrix[point+1][2]),
+                   screen, zbuffer, color)    
         point+= 2
         
 def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
@@ -283,7 +291,7 @@ def add_point( matrix, x, y, z=0 ):
 
 
 
-def draw_line( x0, y0, x1, y1, screen, color ):
+def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
 
     x0 = int(x0)
     y0 = int(y0)
@@ -312,7 +320,8 @@ def draw_line( x0, y0, x1, y1, screen, color ):
             d = A + B/2
 
             while x < x1:
-                plot(screen, color, x, y)
+                z = (x-x0)*(z1-z0)/(x1-x0)
+                plot(screen, zbuffer, color, x, y, z)
                 if d > 0:
                     y+= 1
                     d+= B
@@ -327,7 +336,8 @@ def draw_line( x0, y0, x1, y1, screen, color ):
             d = A - B/2
 
             while x < x1:
-                plot(screen, color, x, y)
+                z = (x-x0)*(z1-z0)/(x1-x0)
+                plot(screen, zbuffer, color, x, y, z)
                 if d < 0:
                     y-= 1
                     d-= B
@@ -345,7 +355,8 @@ def draw_line( x0, y0, x1, y1, screen, color ):
             d = A/2 + B
 
             while y < y1:
-                plot(screen, color, x, y)
+                z = (y-y0)*(z1-z0)/(y1-y0)
+                plot(screen, zbuffer, color, x, y, z)
                 if d < 0:
                     x+= 1
                     d+= A
@@ -360,7 +371,8 @@ def draw_line( x0, y0, x1, y1, screen, color ):
             d = A/2 - B;
 
             while y > y1:
-                plot(screen, color, x, y)
+                z = (y-y0)*(z1-z0)/(y1-y0)
+                plot(screen, zbuffer, color, x, y, z)
                 if d > 0:
                     x+= 1
                     d+= A
