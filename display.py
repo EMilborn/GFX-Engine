@@ -16,12 +16,14 @@ def new_screen( width = XRES, height = YRES ):
     screen = []
     zbuffer = []
     for y in range( height ):
-        row = []
-        screen.append( row )
-        zbuffer.append( row )
+        rowS = []
+        rowZ = []
+        screen.append( rowS )
+        zbuffer.append( rowZ )
         for x in range( width ):
             screen[y].append( DEFAULT_COLOR[:] )
             zbuffer[y].append( float("-inf") )
+    
     return screen, zbuffer
 
 def plot( screen, zbuffer, color, x, y, z ):
@@ -40,10 +42,13 @@ def clear_screen( screen, zbuffer ):
 def save_ppm( screen, fname ):
     f = open( fname, 'w' )
     ppm = 'P3\n' + str(len(screen[0])) +' '+ str(len(screen)) +' '+ str(MAX_COLOR) +'\n'
+    
     for y in range( len(screen) ):
         row = ''
+        
         for x in range( len(screen[y]) ):
             pixel = screen[y][x]
+            print pixel
             row+= str( pixel[ RED ] ) + ' '
             row+= str( pixel[ GREEN ] ) + ' '
             row+= str( pixel[ BLUE ] ) + ' '

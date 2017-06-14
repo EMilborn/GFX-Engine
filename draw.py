@@ -8,7 +8,7 @@ def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x1, y1, z1);
     add_point(polygons, x2, y2, z2);
 
-def draw_polygons( matrix, screen, color ):
+def draw_polygons( matrix, screen,zbuffer, color ):
     if len(matrix) < 2:
         print 'Need at least 3 points to draw'
         return
@@ -31,25 +31,39 @@ def draw_polygons( matrix, screen, color ):
                     matrix[point+2][2]):
                 draw_line( round(pair[0]),
                            round(pair[2]),
+                           pair[3],
                            round(pair[1]),
                            round(pair[2]),
+                           pair[4],
                            screen,
+                           zbuffer,
                            [0,255,0])
             draw_line( round(matrix[point][0]),
                        round(matrix[point][1]),
+                       matrix[point][2],
                        round(matrix[point+1][0]),
                        round(matrix[point+1][1]),
-                       screen, color)
+                       matrix[point+1][2],
+                       screen,
+                       zbuffer,
+                       color)
             draw_line( round(matrix[point+2][0]),
                        round(matrix[point+2][1]),
+                       matrix[point+2][2],
                        round(matrix[point+1][0]),
                        round(matrix[point+1][1]),
-                       screen, color)
+                       matrix[point+1][2],
+                       zbuffer,
+                       screen,
+                       color)
             draw_line( round(matrix[point][0]),
                        round(matrix[point][1]),
+                       matrix[point][2],
                        round(matrix[point+2][0]),
                        round(matrix[point+2][1]),
-                       screen, color)
+                       matrix[point+2][2],
+                       screen, zbuffer,
+                       color)
         point += 3
 
 def triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2):
@@ -77,9 +91,9 @@ def triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2):
     while y < tY:
         x3 = mX+(y-mY)*(tX-mX)/(tY-mY)
         x4 = bX+(y-bY)*(tX-bX)/(tY-bY)
-        points.append( (x3, x4, y,z3,z4))
+        points.append( (x3, x4, y, z3, z4))
         y+=1
-    points.append((tX,tX,tY))
+    points.append((tX, tX, tY, tZ, tZ))
     print points
     return points
     
@@ -328,7 +342,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
                 x+= 1
                 d+= A
             #end octant 1 while
-            plot(screen, color, x1, y1)
+            plot(screen, zbuffer, color, x1, y1, z1)
         #end octant 1
 
         #octant 8
@@ -344,7 +358,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
                 x+= 1
                 d+= A
             #end octant 8 while
-            plot(screen, color, x1, y1)
+            plot(screen, zbuffer, color, x1, y1, z1)
         #end octant 8
     #end octants 1 and 8
 
@@ -363,7 +377,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
                 y+= 1
                 d+= B
             #end octant 2 while
-            plot(screen, color, x1, y1)
+            plot(screen, zbuffer, color, x1, y1, z1)
         #end octant 2
 
         #octant 7
@@ -379,7 +393,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
                 y-= 1
                 d-= B
             #end octant 7 while
-            plot(screen, color, x1, y1)
+            plot(screen, zbuffer, color, x1, y1, z1)
         #end octant 7
     #end octants 2 and 7
 #end draw_line
