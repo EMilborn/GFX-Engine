@@ -19,7 +19,8 @@ def draw_polygons( matrix, screen,zbuffer, color ):
 
         normal = calculate_normal(matrix, point)[:]
         if normal[2] > 0:
-            
+            c = [255*randint(0,255), 255*randint(0,255), 255*randint(0,255)]
+
             for pair in triangle(
                     matrix[point][0],
                     matrix[point][1],
@@ -30,7 +31,6 @@ def draw_polygons( matrix, screen,zbuffer, color ):
                     matrix[point+2][0],
                     matrix[point+2][1],
                     matrix[point+2][2]):
-                c = [255*randint(0,255), 255*randint(0,255), 255*randint(0,255)]
                 draw_line( round(pair[0]),
                            round(pair[2]),
                            pair[3],
