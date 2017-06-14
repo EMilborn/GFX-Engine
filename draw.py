@@ -86,13 +86,15 @@ def triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2):
     while y < mY:
         x3 = bX+(y-bY)*(mX-bX)/(mY-bY)
         x4 = bX+(y-bY)*(tX-bX)/(tY-bY)
-        z3 = bX+(y-bY)*(mX-bX)/(mY-bY)
-        z4 = bX+(y-bY)*(tX-bX)/(tY-bY)
+        z3 = bZ+(y-bY)*(mZ-bZ)/(mY-bY)
+        z4 = bZ+(y-bY)*(tZ-bZ)/(tY-bY)
         points.append( (x3, x4, y, z3, z4))
         y+=1
     while y < tY:
         x3 = mX+(y-mY)*(tX-mX)/(tY-mY)
         x4 = bX+(y-bY)*(tX-bX)/(tY-bY)
+	z3 = bZ+(y-bY)*(mZ-mZ)/(tY-mY)
+        z4 = bZ+(y-bY)*(tZ-bZ)/(tY-bY)
         points.append( (x3, x4, y, z3, z4))
         y+=1
     points.append((tX, tX, tY, tZ, tZ))
