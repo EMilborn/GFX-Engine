@@ -29,6 +29,7 @@ def draw_polygons( matrix, screen,zbuffer, color ):
                     matrix[point+2][0],
                     matrix[point+2][1],
                     matrix[point+2][2]):
+                color = [255*random(), 255*random(), 255*random()]
                 draw_line( round(pair[0]),
                            round(pair[2]),
                            pair[3],
