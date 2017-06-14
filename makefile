@@ -1,5 +1,5 @@
 run: 
-	python main.py simple_anim.mdl
+	python main.py script.mdl
 
 clean:
 	rm *pyc *out parsetab.py
