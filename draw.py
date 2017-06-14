@@ -2,6 +2,7 @@ from display import *
 from matrix import *
 from math import *
 from gmath import *
+from random  import *
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x0, y0, z0);
@@ -29,7 +30,7 @@ def draw_polygons( matrix, screen,zbuffer, color ):
                     matrix[point+2][0],
                     matrix[point+2][1],
                     matrix[point+2][2]):
-                color = [255*random(), 255*random(), 255*random()]
+                color = [255*randint(0,255), 255*randint(0,255), 255*randint(0,255)]
                 draw_line( round(pair[0]),
                            round(pair[2]),
                            pair[3],
